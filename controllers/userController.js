@@ -11,16 +11,17 @@ class userController {
         try {
             const { ...userdata } = req.body;
     
-            const candidate = await User.findOne({where: { email: userdata.email, telephone: userdata.telephone }});
+            const candidate1 = await User.findOne({where: { email: userdata.email }});
+            const candidate2 = await User.findOne({where: { telephone: userdata.telephone }});
     
-            if(candidate){
+            if(candidate1 || candidate2){
                 return res.status(403).json({message: 'Пользователь с такими данными уже существует'});
             };
     
             const salt = await bcrypt.genSalt(10);
             const passwordHash = await bcrypt.hash(userdata.password, salt);
     
-            const user = await User.create({...userdata, passwordHash: passwordHash, role});
+            const user = await User.create({...userdata, passwordHash: passwordHash, role: userdata.role});
             
             res.json({...user.dataValues});
         } catch (error) {
@@ -92,6 +93,41 @@ class userController {
             res.json({message: 'Не удалось получить данные о пользоватклях'})
         }
     };
+
+    async getUser (req, res) {
+        try {
+            const { id } = req.body;
+
+            const user = await User.findOne({where: { id }});
+
+            res.json(user)
+        } catch (error) {
+            console.log(error);
+            res.json({message: 'Не удалось получить данные о пользователе'})
+        }
+    };
+
+    async editUser (req, res) {
+        try {
+            const { ...userdata } = req.body;
+
+            const candidate1 = await User.findOne({where: { email: userdata.email }});
+            const candidate2 = await User.findOne({where: { telephone: userdata.telephone }});
+    
+            if(candidate1 && candidate1.id !== userdata.id && candidate1.role === userdata.role){
+                return res.status(403).json({message: 'Пользователь с такими данными уже существует'});
+            }else if(candidate2 && candidate2.id !== userdata.id && candidate1.role === userdata.role){
+                return res.status(403).json({message: 'Пользователь с такими данными уже существует'});
+            }
+
+            await User.update({ ...userdata }, {where: { id: userdata.id }});
+            
+            res.json({message: 'Данные пользователя изменены'});
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({message: 'Не удалось изменить данные о пользователе'})
+        }
+    }
 }
 
 export default new userController();

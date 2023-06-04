@@ -3,6 +3,7 @@ import sequelize from '../db.js';
 
 const Request = sequelize.define('Request', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
+    authorName: {type: DataTypes.STRING, allowNull: false},
     UserId: {type: DataTypes.INTEGER, allowNull: true},
     CourseId: {type: DataTypes.INTEGER, allowNull: true},
     status: {type: DataTypes.STRING, allowNull: false, defaultValue: 'На рассмотрении'},

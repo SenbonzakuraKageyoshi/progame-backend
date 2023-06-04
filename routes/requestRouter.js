@@ -7,5 +7,7 @@ const router = Router();
 
 router.post('/create', requestController.createRequest);
 router.post('/get-requests', authCheck, requestController.getRequests);
+router.post('/edit-request', authCheck, checkAdmin, requestController.editRequestStatus);
+router.post('/remove-request', authCheck, checkAdmin, requestController.removeRequest);
 
 export default router;

@@ -38,6 +38,23 @@ class authController {
             res.status(500).json({message: "Не удалось авторизоваться"}); 
         };
     };
+
+    async logout (req, res) {
+        try {
+            const { id } = req.body;
+
+            const candidate = await Token.findOne({where: { UserId: id }});
+
+            if(candidate){
+                await Token.destroy({ where: { UserId: id } })
+            }
+
+            res.json({ message: 'Вы вышли из профиля' })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({message: "Не удалось выйти из аккаунта"}); 
+        }
+    }
 }
 
 export default new authController()

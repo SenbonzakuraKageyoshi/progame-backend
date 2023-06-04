@@ -11,5 +11,6 @@ router.post('/technicial-register-admin-account', userController.createUserTechn
 router.post('/get-users', authCheck, checkAdmin, userController.getUsers);
 router.post('/get-user', authCheck, checkAdmin, userController.getUser);
 router.post('/edit-user', authCheck, checkAdmin, userController.editUser);
+router.post('/remove-user', authCheck, checkAdmin, userController.removeUser);
 
 export default router;

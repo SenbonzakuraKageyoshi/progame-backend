@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Token } from '../models/token.js';
 import dotenv from 'dotenv';
+import { Course, StudentCourse } from '../models/course.js';
 
 dotenv.config();
 
@@ -127,7 +128,43 @@ class userController {
             console.log(error)
             res.status(500).json({message: 'Не удалось изменить данные о пользователе'})
         }
-    }
+    };
+
+    async removeUser (req, res) {
+        try {
+            const { id } = req.body;
+
+            const candidate = User.findOne({ where: { id } });
+
+            if(!candidate){
+                return res.status(404).json({message: 'Пользователя не существует'})
+            }
+            
+            const token = await Token.findOne({ where: { UserId: id } })
+
+            if(token){
+                await Token.destroy({ where: { UserId: id } })
+            }
+
+            const studentCourses = await StudentCourse.findAll({where: { UserId: id }});
+
+            if(studentCourses){
+                studentCourses.forEach(async (el) => {
+                    const course = await Course.findOne({where: { id: el.dataValues.CourseId }})
+                    await Course.update({ closedPlaces: course.dataValues.closedPlaces - 1 }, {where: { id: el.dataValues.CourseId }});
+                })
+
+                await StudentCourse.destroy({where: { UserId: id }});
+            }
+            
+            await User.destroy({ where: { id } });
+
+            res.json({message: 'Пользователь удален'})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({message: 'Не удалось удалить пользователя'})
+        }
+    };
 }
 
 export default new userController();

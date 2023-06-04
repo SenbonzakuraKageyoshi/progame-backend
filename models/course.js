@@ -5,6 +5,7 @@ import { User } from "./user.js";
 const Course = sequelize.define('Course', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
     name: {type: DataTypes.STRING, allowNull: false},
+    status: {type: DataTypes.STRING, allowNull: false, defaultValue: 'Не начат'},
     teacher: {type: DataTypes.STRING, allowNull: false},
     shedule: {type: DataTypes.STRING, allowNull: true},
     price: {type: DataTypes.STRING, allowNull: false},
@@ -14,6 +15,17 @@ const Course = sequelize.define('Course', {
     places: {type: DataTypes.INTEGER, allowNull: false},
 });
 
+const StudentCourse = sequelize.define('StudentCourse', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false},
+});
+
+Course.belongsToMany(User, { through: StudentCourse });
+User.belongsToMany(Course, { through: StudentCourse });
+
+StudentCourse.belongsTo(User);
+StudentCourse.belongsTo(Course);
+
 export {
     Course,
+    StudentCourse
 }

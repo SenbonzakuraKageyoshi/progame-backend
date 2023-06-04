@@ -24,21 +24,19 @@ class courseController {
                 res.json(courses)
             }else{
                 const courses = await Course.findAll({where: { status: 'Не начат' }});
+                const studentCourses = await StudentCourse.findAll({ where: { UserId: id }, include: [{model: User}, {model: Course}] })
 
                 if(id){
                     const visibleCourses = [];
 
-                    const studentCourses = await StudentCourse.findAll({ where: { UserId: id }, include: [{model: User}, {model: Course}] });
-
-                    studentCourses.forEach((studentCourse) => {
-                        courses.find((el) => {
-                            el.dataValues.id !== studentCourse.dataValues.CourseId
-                            &&
-                            visibleCourses.push(el)
-                        })
+                    courses.forEach((course) => {
+                        if(!studentCourses.find((el) => el.CourseId === course.id && el.UserId === id)){
+                            visibleCourses.push(course)
+                        }
                     })
 
                     return res.json(visibleCourses)
+
                 }
                 
                 res.json(courses)
@@ -108,6 +106,10 @@ class courseController {
 
             if(!course){
                 return res.status(404).json({message: 'Курса не существует'});
+            }
+
+            if(course.dataValues.places - course.dataValues.closedPlaces === 0){
+                res.json({message: 'Все места заняты'})
             }
 
             await StudentCourse.create({UserId, CourseId});

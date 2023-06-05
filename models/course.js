@@ -13,6 +13,8 @@ const Course = sequelize.define('Course', {
     description: {type: DataTypes.STRING, allowNull: false},
     closedPlaces: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0},
     places: {type: DataTypes.INTEGER, allowNull: false},
+    dateStart: {type: DataTypes.STRING, allowNull: false},
+    dateEnd: {type: DataTypes.STRING, allowNull: false},
 });
 
 const StudentCourse = sequelize.define('StudentCourse', {

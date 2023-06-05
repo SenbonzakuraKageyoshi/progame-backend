@@ -4,7 +4,7 @@ class requestController {
     async createRequest (req, res) {
         try {
             const { UserId = null, CourseId = null, text, telephone, email, authorName } = req.body;
-
+            console.log(req.body)
             await Request.create({ UserId, CourseId, text, telephone, email, authorName })
 
             res.json({message: 'Заявка отправлена'})

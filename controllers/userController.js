@@ -84,8 +84,8 @@ class userController {
 
     async getUsers (req, res) {
         try {
-            const { type } = req.body;
-
+            const { type } = req.query;
+            console.log(req.query)
             const users = await User.findAll({where: { role: type }});
 
             res.json(users)
@@ -97,7 +97,7 @@ class userController {
 
     async getUser (req, res) {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
 
             const user = await User.findOne({where: { id }});
 

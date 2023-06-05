@@ -6,7 +6,7 @@ import checkAdmin from '../utils/adminCheck.js';
 const router = Router();
 
 router.post('/create', authCheck, checkAdmin, courseController.createCourse);
-router.post('/get-courses', authCheck, courseController.getCourses);
+router.post('/get-courses', courseController.getCourses);
 router.post('/get-my-courses', authCheck, courseController.getMyCourses);
 router.post('/get-course', authCheck, courseController.getCourse);
 router.post('/edit-course', authCheck, checkAdmin, courseController.editCourse);

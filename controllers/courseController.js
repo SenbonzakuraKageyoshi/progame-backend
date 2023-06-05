@@ -24,9 +24,9 @@ class courseController {
                 res.json(courses)
             }else{
                 const courses = await Course.findAll({where: { status: 'Не начат' }});
-                const studentCourses = await StudentCourse.findAll({ where: { UserId: id }, include: [{model: User}, {model: Course}] })
 
                 if(id){
+                    const studentCourses = await StudentCourse.findAll({ where: { UserId: id }, include: [{model: User}, {model: Course}] })
                     const visibleCourses = [];
 
                     courses.forEach((course) => {

@@ -8,8 +8,8 @@ const router = Router();
 router.get('/get-me', authCheck, userController.getMe);
 router.post('/create', authCheck, checkAdmin, userController.createUser);
 router.post('/technicial-register-admin-account', userController.createUserTechnicialController);
-router.post('/get-users', authCheck, checkAdmin, userController.getUsers);
-router.post('/get-user', authCheck, checkAdmin, userController.getUser);
+router.get('/get-users', authCheck, checkAdmin, userController.getUsers);
+router.get('/get-user', authCheck, checkAdmin, userController.getUser);
 router.post('/edit-user', authCheck, checkAdmin, userController.editUser);
 router.post('/remove-user', authCheck, checkAdmin, userController.removeUser);
 

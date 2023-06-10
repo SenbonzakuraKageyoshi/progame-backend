@@ -60,6 +60,12 @@ class userController {
             if(!accessToken) {
                 return res.status(404).json({message: 'Пользователь не найден'})
             };
+
+            const findedToken = await Token.findOne({where: { accessToken }});
+
+            if(!findedToken){
+                return res.status(404).json({message: 'Пользователь не авторизаован'})
+            }
     
             const { id } = jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
             
